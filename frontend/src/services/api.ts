@@ -1,21 +1,21 @@
 import axios from 'axios';
-import {Equation, OdeRequest, OdeResult} from "../types";
 
-const api = axios.create({
-    baseURL: 'http://localhost:8080/api',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-});
-
+const API_BASE_URL = 'http://localhost:8080/api/math';
 
 export const odeApi = {
-    getEquations: async (): Promise<Equation[]> => {
-        const response = await api.get<Equation[]>('/ode/equations');
+    getEquations: async () => {
+        const response = await axios.get(`${API_BASE_URL}/ode/equations`);
         return response.data;
     },
-    solve: async (data: OdeRequest): Promise<   OdeResult[]> => {
-        const response = await api.post<OdeResult[]>('/ode/solve', data);
+    solve: async (params: any) => {
+        const response = await axios.post(`${API_BASE_URL}/ode/solve`, params);
+        return response.data;
+    }
+};
+
+export const sweepApi = {
+    solve: async (data: { a: number[]; c: number[]; b: number[]; f: number[] }): Promise<number[]> => {
+        const response = await axios.post(`${API_BASE_URL}/sweep/solve`, data);
         return response.data;
     }
 };
